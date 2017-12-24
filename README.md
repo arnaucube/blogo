@@ -1,40 +1,44 @@
-# Blogo
+# Blogo [![Go Report Card](https://goreportcard.com/badge/github.com/arnaucode/blogo)](https://goreportcard.com/report/github.com/arnaucode/blogo)
 Static blog generator, templating engine from markdown and html templates
 
-Types of blogo tags:
-- index.html
+
+## Use
+Directory structure:
+
 ```
-[blogo-title]
-[blogo-index]
-```
-- postTemplate.html
-```
-[blogo-post-title]
-[blogo-post-md]
+/
+----blogo
+----/blogo-input
+--------all the html, js, css files and folders
 ```
 
+To execute:
+```
+./blogo
+```
 
-Example of config.json:
+Example of blogo.json:
+
 ```json
 {
     "title": "my blog",
     "indexTemplate": "index.html",
-    "indexPostTemplate": "indexPostTemplate.html",
-    "postTemplate": "postTemplate.html",
+    "postThumbTemplate": "postThumbTemplate.html",
     "posts": [
         {
-            "title": "Post 01",
-            "thumb": "post01thumb.md",
+            "thumb": "post01_thumb.md",
             "md": "post01.md"
         },
         {
-            "title": "Post 02",
-            "thumb": "post02thumb.md",
+            "thumb": "post02_thumb.md",
             "md": "post02.md"
         }
+    ],
+    "copyRaw": [
+      "css",
+      "js"
     ]
 }
-
 ```
 
 
@@ -49,13 +53,13 @@ Example of input files:
 </head>
 <body>
 
-[blogo-index]
+[blogo-content]
 
 </body>
 </html>
 ```
 
-- indexPostTemplate.html
+- postThumbTemplate.html
 
 ```html
 <div class="col-md-3">
@@ -64,18 +68,25 @@ Example of input files:
 
 ```
 
-- postTemplate.html
+- post01_thumb.md
 
-```html
-<!DOCTYPE html>
-<html>
-<head>
-  <title>[blogo-post-title]</title>
-</head>
-<body>
+```
+# Post 01 thumb
+This is the description of the Post 01. This will appear on the main page, as the post description.
+```
 
-[blogo-post-content]
+- post01.md
 
-</body>
-</html>
+```
+# Post 01
+This is the content of the Post 01. This content will appear when the Post 01 from the main page is clicked.
+```
+
+
+Types of blogo tags:
+
+```
+[blogo-title]
+[blogo-content]
+[blogo-index-post-template]
 ```

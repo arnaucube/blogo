@@ -39,7 +39,7 @@ func concatStringsWithJumps(lines []string) string {
 }
 
 func copyRaw(original string, destination string) {
-	color.Green(destination)
-	_, err := exec.Command("cp", "-r", original, destination).Output()
+	color.Green(original + " --> to --> " + destination)
+	_, err := exec.Command("cp", "-rf", original, destination).Output()
 	check(err)
 }

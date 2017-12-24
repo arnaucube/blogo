@@ -5,17 +5,18 @@ import (
 	"io/ioutil"
 )
 
+//Post is the struct for each post of the blog
 type Post struct {
-	Title string `json:"title"`
 	Thumb string `json:"thumb"`
 	Md    string `json:"md"`
 }
+
+//Config gets the config.json file into struct
 type Config struct {
-	Title             string `json:"title"`
-	IndexTemplate     string `json:"indexTemplate"`
-	IndexPostTemplate string `json:"indexPostTemplate"`
-	PostTemplate      string `json:"postTemplate"`
-	Posts             []Post `json:"posts"`
+	Title             string   `json:"title"`
+	IndexTemplate     string   `json:"indexTemplate"`
+	PostThumbTemplate string   `json:"postThumbTemplate"`
+	Posts             []Post   `json:"posts"`
 	CopyRaw           []string `json:"copyRaw"`
 }
 
