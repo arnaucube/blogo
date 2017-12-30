@@ -27,7 +27,7 @@ func main() {
 		m["[blogo-index-post-template]"] = htmlpostthumb
 		r := putHTMLToTemplate(indexPostTemplate, m)
 		filename := strings.Split(post.Md, ".")[0]
-		r = "<a href='" + filename + ".html'>" + r + "</a>"
+		r = "<a href='" + config.RelativePath + "/" + filename + ".html'>" + r + "</a>"
 		blogoIndex = blogoIndex + r
 	}
 	//put the blogoIndex in the index.html

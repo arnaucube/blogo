@@ -14,6 +14,7 @@ type Post struct {
 //Config gets the config.json file into struct
 type Config struct {
 	Title             string   `json:"title"`
+	RelativePath      string   `json:"relativePath"`
 	IndexTemplate     string   `json:"indexTemplate"`
 	PostThumbTemplate string   `json:"postThumbTemplate"`
 	Posts             []Post   `json:"posts"`
