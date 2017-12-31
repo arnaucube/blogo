@@ -43,8 +43,11 @@ func main() {
 		mdcontent := readFile(directory + "/" + post.Md)
 		htmlcontent := string(blackfriday.Run([]byte(mdcontent)))
 
+		firstline := strings.Split(mdcontent, "\n")[0]
+		title := strings.Replace(firstline, "# ", "", -1)
+
 		m := make(map[string]string)
-		m["[blogo-title]"] = config.Title
+		m["[blogo-title]"] = title + " - " + config.Title
 		m["[blogo-content]"] = htmlcontent
 
 		r := putHTMLToTemplate(indexTemplate, m)

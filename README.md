@@ -90,3 +90,8 @@ Types of blogo tags:
 [blogo-content]
 [blogo-index-post-template]
 ```
+
+
+---
+
+Blogo is used in https://arnaucode.com/blog
