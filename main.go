@@ -2,16 +2,21 @@ package main
 
 import (
 	"fmt"
+	"os"
 	"strings"
 
-	blackfriday "gopkg.in/russross/blackfriday.v2"
+	// blackfriday "gopkg.in/russross/blackfriday.v2"
+	"github.com/russross/blackfriday"
 )
 
 const directory = "blogo-input"
+const outputDir = "public"
 
 func main() {
 	readConfig(directory + "/blogo.json")
 	fmt.Println(config)
+
+	_ = os.Mkdir(outputDir, os.ModePerm)
 
 	// generate index page
 	indexTemplate := readFile(directory + "/" + config.IndexTemplate)
@@ -35,7 +40,7 @@ func main() {
 	m["[blogo-title]"] = config.Title
 	m["[blogo-content]"] = blogoIndex
 	r := putHTMLToTemplate(indexTemplate, m)
-	writeFile("index.html", r)
+	writeFile(outputDir+"/"+"index.html", r)
 
 	// generate posts pages
 
@@ -54,13 +59,13 @@ func main() {
 		//fmt.Println(r)
 
 		filename := strings.Split(post.Md, ".")[0]
-		writeFile(filename+".html", r)
+		writeFile(outputDir+"/"+filename+".html", r)
 	}
 
 	//copy raw
 	fmt.Println("copying raw:")
 	for _, dir := range config.CopyRaw {
-		copyRaw(directory+"/"+dir, ".")
+		copyRaw(directory+"/"+dir, outputDir+"/")
 	}
 }
 
