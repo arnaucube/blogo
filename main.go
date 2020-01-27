@@ -51,14 +51,16 @@ func main() {
 		firstline := strings.Split(mdcontent, "\n")[0]
 		title := strings.Replace(firstline, "# ", "", -1)
 
+		filename := strings.Split(post.Md, ".")[0]
+
 		m := make(map[string]string)
 		m["[blogo-title]"] = title + " - " + config.Title
 		m["[blogo-content]"] = htmlcontent
+		m["[blogo-summary]"] = post.MetaDescr
+		m["[blogo-link]"] = config.AbsoluteUrl + "/" + filename + ".html"
+		m["[blogo-img]"] = config.AbsoluteUrl + "/" + post.MetaImg
 
 		r := putHTMLToTemplate(indexTemplate, m)
-		//fmt.Println(r)
-
-		filename := strings.Split(post.Md, ".")[0]
 		writeFile(outputDir+"/"+filename+".html", r)
 	}
 
