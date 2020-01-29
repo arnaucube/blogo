@@ -16,6 +16,8 @@ type Post struct {
 //Config gets the config.json file into struct
 type Config struct {
 	Title             string   `json:"title"`
+	MetaImg           string   `json:"metaimg"`
+	MetaDescr         string   `json:"metadescr"`
 	RelativePath      string   `json:"relativePath"`
 	AbsoluteUrl       string   `json:"absoluteUrl"`
 	IndexTemplate     string   `json:"indexTemplate"`

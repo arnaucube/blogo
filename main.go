@@ -39,6 +39,9 @@ func main() {
 	m := make(map[string]string)
 	m["[blogo-title]"] = config.Title
 	m["[blogo-content]"] = blogoIndex
+	m["[blogo-summary]"] = config.MetaDescr
+	m["[blogo-img]"] = config.AbsoluteUrl + "/" + config.MetaImg
+	m["[blogo-link]"] = config.AbsoluteUrl
 	r := putHTMLToTemplate(indexTemplate, m)
 	writeFile(outputDir+"/"+"index.html", r)
 
