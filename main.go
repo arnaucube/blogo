@@ -5,18 +5,24 @@ import (
 	"os"
 	"strings"
 
-	// blackfriday "gopkg.in/russross/blackfriday.v2"
-	"github.com/russross/blackfriday"
+	"github.com/gomarkdown/markdown"
+	"github.com/gomarkdown/markdown/parser"
 )
 
+const version = "v0_20210717"
 const directory = "blogo-input"
 const outputDir = "public"
 
 func main() {
+	fmt.Println("Blogo version:", version)
 	readConfig(directory + "/blogo.json")
 	fmt.Println(config)
 
 	_ = os.Mkdir(outputDir, os.ModePerm)
+
+	mdExtensions := parser.NoIntraEmphasis | parser.Tables | parser.FencedCode |
+		parser.Autolink | parser.Strikethrough | parser.SpaceHeadings | parser.HeadingIDs |
+		parser.BackslashLineBreak | parser.DefinitionLists
 
 	// generate index page
 	indexTemplate := readFile(directory + "/" + config.IndexTemplate)
@@ -24,12 +30,13 @@ func main() {
 	var blogoIndex string
 	blogoIndex = ""
 	for _, post := range config.Posts {
-		mdpostthumb := readFile(directory + "/" + post.Thumb)
-		htmlpostthumb := string(blackfriday.Run([]byte(mdpostthumb)))
+		mdpostthumb := readFile(directory + "/" + config.PostsDir + post.Thumb)
+		mdParser := parser.NewWithExtensions(mdExtensions)
+		htmlpostthumb := markdown.ToHTML([]byte(mdpostthumb), mdParser, nil)
 
 		//put the htmlpostthumb in the blogo-index-post-template
 		m := make(map[string]string)
-		m["[blogo-index-post-template]"] = htmlpostthumb
+		m["[blogo-index-post-template]"] = string(htmlpostthumb)
 		r := putHTMLToTemplate(indexPostTemplate, m)
 		filename := strings.Split(post.Md, ".")[0]
 		r = "<a href='" + config.RelativePath + "/" + filename + ".html'>" + r + "</a>"
@@ -48,8 +55,9 @@ func main() {
 	// generate posts pages
 
 	for _, post := range config.Posts {
-		mdcontent := readFile(directory + "/" + post.Md)
-		htmlcontent := string(blackfriday.Run([]byte(mdcontent)))
+		mdcontent := readFile(directory + "/" + config.PostsDir + post.Md)
+		mdParser := parser.NewWithExtensions(mdExtensions)
+		htmlcontent := markdown.ToHTML([]byte(mdcontent), mdParser, nil)
 
 		firstline := strings.Split(mdcontent, "\n")[0]
 		title := strings.Replace(firstline, "# ", "", -1)
@@ -58,7 +66,7 @@ func main() {
 
 		m := make(map[string]string)
 		m["[blogo-title]"] = title + " - " + config.Title
-		m["[blogo-content]"] = htmlcontent
+		m["[blogo-content]"] = string(htmlcontent)
 		m["[blogo-summary]"] = post.MetaDescr
 		m["[blogo-link]"] = config.AbsoluteUrl + "/" + filename + ".html"
 		m["[blogo-img]"] = config.AbsoluteUrl + "/" + post.MetaImg

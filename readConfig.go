@@ -19,6 +19,7 @@ type Config struct {
 	MetaImg           string   `json:"metaimg"`
 	MetaDescr         string   `json:"metadescr"`
 	RelativePath      string   `json:"relativePath"`
+	PostsDir          string   `json:"postsDir"`
 	AbsoluteUrl       string   `json:"absoluteUrl"`
 	IndexTemplate     string   `json:"indexTemplate"`
 	PostThumbTemplate string   `json:"postThumbTemplate"`
@@ -33,4 +34,7 @@ func readConfig(path string) {
 	check(err)
 	content := string(file)
 	json.Unmarshal([]byte(content), &config)
+	if config.PostsDir != "" {
+		config.PostsDir += "/"
+	}
 }
