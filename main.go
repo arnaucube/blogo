@@ -9,7 +9,7 @@ import (
 	"github.com/gomarkdown/markdown/parser"
 )
 
-const version = "v0_20210717"
+const version = "v0_20210810"
 const directory = "blogo-input"
 const outputDir = "public"
 
@@ -60,7 +60,7 @@ func main() {
 		htmlcontent := markdown.ToHTML([]byte(mdcontent), mdParser, nil)
 
 		firstline := strings.Split(mdcontent, "\n")[0]
-		title := strings.Replace(firstline, "# ", "", -1)
+		title := strings.Replace(firstline, "#", "", -1)
 
 		filename := strings.Split(post.Md, ".")[0]
 
