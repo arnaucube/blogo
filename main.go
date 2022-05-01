@@ -1,7 +1,10 @@
 package main
 
 import (
+	"flag"
 	"fmt"
+	"log"
+	"net/http"
 	"os"
 	"strings"
 
@@ -9,16 +12,38 @@ import (
 	"github.com/gomarkdown/markdown/parser"
 )
 
-const version = "v0_20210810"
+const version = "v0_20220501"
 const directory = "blogo-input"
 const outputDir = "public"
 
 func main() {
+	devMode := flag.Bool("d", false, "dev mode")
+	port := flag.String("p", "8080", "port (only for dev mode)")
+	flag.Parse()
+
 	fmt.Println("Blogo version:", version)
+	_ = os.Mkdir(outputDir, os.ModePerm)
+
+	fmt.Println("devMode:", *devMode)
+	generateHTML()
+	if !*devMode {
+		return
+	}
+
+	go watch("./blogo-input")
+	// TODO public not watched, until a way to force browser refresh
+	// go watch("./public")
+
+	// serve files
+	fs := http.FileServer(http.Dir("public"))
+	fmt.Printf("Blog being served in: \n http://127.0.0.1:%s\n http://localhost:%s\n",
+		*port, *port)
+	log.Fatal(http.ListenAndServe(":"+*port, fs))
+}
+
+func generateHTML() {
 	readConfig(directory + "/blogo.json")
 	fmt.Println(config)
-
-	_ = os.Mkdir(outputDir, os.ModePerm)
 
 	mdExtensions := parser.NoIntraEmphasis | parser.Tables | parser.FencedCode |
 		parser.Autolink | parser.Strikethrough | parser.SpaceHeadings | parser.HeadingIDs |
