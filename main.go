@@ -12,9 +12,9 @@ import (
 	"github.com/gomarkdown/markdown/parser"
 )
 
-const version = "v0_20220501"
+const version = "v0_20220503"
 const directory = "blogo-input"
-const outputDir = "public"
+const defaultOutputDir = "public"
 
 func main() {
 	devMode := flag.Bool("d", false, "dev mode")
@@ -22,7 +22,8 @@ func main() {
 	flag.Parse()
 
 	fmt.Println("Blogo version:", version)
-	_ = os.Mkdir(outputDir, os.ModePerm)
+	readConfig(directory + "/blogo.json")
+	_ = os.Mkdir(config.OutputDir, os.ModePerm)
 
 	fmt.Println("devMode:", *devMode)
 	generateHTML()
@@ -35,7 +36,7 @@ func main() {
 	// go watch("./public")
 
 	// serve files
-	fs := http.FileServer(http.Dir("public"))
+	fs := http.FileServer(http.Dir(config.OutputDir))
 	fmt.Printf("Blog being served in: \n http://127.0.0.1:%s\n http://localhost:%s\n",
 		*port, *port)
 	log.Fatal(http.ListenAndServe(":"+*port, fs))
@@ -75,7 +76,7 @@ func generateHTML() {
 	m["[blogo-img]"] = config.AbsoluteUrl + "/" + config.MetaImg
 	m["[blogo-link]"] = config.AbsoluteUrl
 	r := putHTMLToTemplate(indexTemplate, m)
-	writeFile(outputDir+"/"+"index.html", r)
+	writeFile(config.OutputDir+"/"+"index.html", r)
 
 	// generate posts pages
 
@@ -97,13 +98,13 @@ func generateHTML() {
 		m["[blogo-img]"] = config.AbsoluteUrl + "/" + post.MetaImg
 
 		r := putHTMLToTemplate(indexTemplate, m)
-		writeFile(outputDir+"/"+filename+".html", r)
+		writeFile(config.OutputDir+"/"+filename+".html", r)
 	}
 
 	//copy raw
 	fmt.Println("copying raw:")
 	for _, dir := range config.CopyRaw {
-		copyRaw(directory+"/"+dir, outputDir+"/")
+		copyRaw(directory+"/"+dir, config.OutputDir+"/")
 	}
 }
 

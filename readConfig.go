@@ -25,6 +25,7 @@ type Config struct {
 	PostThumbTemplate string   `json:"postThumbTemplate"`
 	Posts             []Post   `json:"posts"`
 	CopyRaw           []string `json:"copyRaw"`
+	OutputDir         string   `json:"outputDir"`
 }
 
 var config Config
@@ -36,5 +37,8 @@ func readConfig(path string) {
 	json.Unmarshal([]byte(content), &config)
 	if config.PostsDir != "" {
 		config.PostsDir += "/"
+	}
+	if config.OutputDir == "" {
+		config.OutputDir = defaultOutputDir
 	}
 }
