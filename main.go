@@ -12,7 +12,7 @@ import (
 	"github.com/gomarkdown/markdown/parser"
 )
 
-const version = "v0_20220503"
+const version = "v0_20220513"
 const directory = "blogo-input"
 const defaultOutputDir = "public"
 
@@ -37,9 +37,10 @@ func main() {
 
 	// serve files
 	fs := http.FileServer(http.Dir(config.OutputDir))
-	fmt.Printf("Blog being served in: \n http://127.0.0.1:%s\n http://localhost:%s\n",
-		*port, *port)
-	log.Fatal(http.ListenAndServe(":"+*port, fs))
+	http.Handle(config.RelativePath+"/", http.StripPrefix(config.RelativePath, fs))
+	fmt.Printf("Blog being served in: \n http://127.0.0.1:%s%s\n http://localhost:%s%s\n",
+		*port, config.RelativePath, *port, config.RelativePath)
+	log.Fatal(http.ListenAndServe(":"+*port, nil))
 }
 
 func generateHTML() {
