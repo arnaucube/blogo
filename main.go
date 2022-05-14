@@ -12,7 +12,7 @@ import (
 	"github.com/gomarkdown/markdown/parser"
 )
 
-const version = "v0_20220513"
+const version = "v0_20220514"
 const directory = "blogo-input"
 const defaultOutputDir = "public"
 
@@ -49,7 +49,7 @@ func generateHTML() {
 
 	mdExtensions := parser.NoIntraEmphasis | parser.Tables | parser.FencedCode |
 		parser.Autolink | parser.Strikethrough | parser.SpaceHeadings | parser.HeadingIDs |
-		parser.BackslashLineBreak | parser.DefinitionLists
+		parser.BackslashLineBreak | parser.DefinitionLists | parser.MathJax
 
 	// generate index page
 	indexTemplate := readFile(directory + "/" + config.IndexTemplate)
