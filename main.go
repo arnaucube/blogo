@@ -12,7 +12,7 @@ import (
 	"github.com/gomarkdown/markdown/parser"
 )
 
-const version = "v0_20220514"
+const version = "v0_20221124"
 const directory = "blogo-input"
 const defaultOutputDir = "public"
 
@@ -65,8 +65,12 @@ func generateHTML() {
 		m := make(map[string]string)
 		m["[blogo-index-post-template]"] = string(htmlpostthumb)
 		r := putHTMLToTemplate(indexPostTemplate, m)
-		filename := strings.Split(post.Md, ".")[0]
-		r = "<a href='" + config.RelativePath + "/" + filename + ".html'>" + r + "</a>"
+		if post.OutsideArticle != "" {
+			r = "<a href='" + post.OutsideArticle + "'>" + r + "</a>"
+		} else {
+			filename := strings.Split(post.Md, ".")[0]
+			r = "<a href='" + config.RelativePath + "/" + filename + ".html'>" + r + "</a>"
+		}
 		blogoIndex = blogoIndex + r
 	}
 	//put the blogoIndex in the index.html
@@ -82,6 +86,9 @@ func generateHTML() {
 	// generate posts pages
 
 	for _, post := range config.Posts {
+		if post.OutsideArticle != "" {
+			continue
+		}
 		mdcontent := readFile(directory + "/" + config.PostsDir + post.Md)
 		mdParser := parser.NewWithExtensions(mdExtensions)
 		htmlcontent := markdown.ToHTML([]byte(mdcontent), mdParser, nil)
